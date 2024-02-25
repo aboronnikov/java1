@@ -1,11 +1,18 @@
 package dagExample;
 
-import java.util.*;
+import java.util.List;
 
 public class DAGExample {
     public static void main(String[] args) {
-        DAG<String> dag = new DAG<>(List.of("anton", "ilya", "pavel", "maksim"),
-                Map.of(0, Set.of(1, 2), 2, Set.of(3)));
+        var anton = new DAGItem<>("anton");
+        var ilya = new DAGItem<>("ilya");
+        var pavel = new DAGItem<>("pavel");
+        var maksim = new DAGItem<>("maksim");
+
+        var dag = new DAG<>(List.of(anton, ilya, pavel, maksim))
+                .addEdge(anton, ilya)
+                .addEdge(pavel, maksim)
+                .addEdge(maksim, anton);
 
         System.out.println("Here we got edges:");
         for (DAGEdge<String> edge : dag.getEdges()) {
@@ -14,6 +21,3 @@ public class DAGExample {
     }
 
 }
-
-
-

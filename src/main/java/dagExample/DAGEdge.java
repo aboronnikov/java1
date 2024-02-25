@@ -1,15 +1,11 @@
 package dagExample;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@AllArgsConstructor
-@Getter
-@Setter
-class DAGEdge<T> {
+@Data
+public class DAGEdge<T> {
 
-    private DAGItem<T> item1;
-    private DAGItem<T> item2;
+    private final DAGItem<T> item1;
+    private final DAGItem<T> item2;
 
 }

@@ -1,28 +1,40 @@
 package dagExample;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.util.Collection;
+import java.util.List;
 
-import java.util.*;
+import com.google.common.collect.ImmutableSet;
 
-@Getter
-@Setter
-class DAG<T> {
-    private ArrayList<DAGItem<T>> items;
-    private Set<DAGEdge<T>> edges;
+import lombok.Data;
 
-    public DAG(List<T> itemVals, Map<Integer, Set<Integer>> edgesMap) {
-        items = new ArrayList<>();
+@Data
+public class DAG<T> {
+    private final ImmutableSet<DAGItem<T>> items;
+    private final ImmutableSet<DAGEdge<T>> edges;
 
-        for (T el : itemVals) {
-            items.add(new DAGItem<>(el));
-        }
-
-        edges = new HashSet<>();
-        edgesMap.forEach((k, v) -> v.forEach(s -> addEdge(k, s)));
+    public DAG() {
+        this.items = ImmutableSet.of();
+        this.edges = ImmutableSet.of();
     }
 
-    public void addEdge(int item1, int item2) {
-        edges.add(new DAGEdge<T>(items.get(item1), items.get(item2)));
+    public DAG(Collection<DAGItem<T>> items) {
+        this(items, List.of());
+    }
+
+    public DAG(Collection<DAGItem<T>> items, Collection<DAGEdge<T>> edges) {
+        this(ImmutableSet.copyOf(items), ImmutableSet.copyOf(edges));
+    }
+
+    public DAG(ImmutableSet<DAGItem<T>> items, ImmutableSet<DAGEdge<T>> edges) {
+        this.items = items;
+        this.edges = edges;
+    }
+
+    public DAG<T> addEdge(DAGItem<T> item1, DAGItem<T> item2) {
+        return new DAG<>(
+                this.items,
+                ImmutableSet.<DAGEdge<T>>builder()
+                        .addAll(this.edges)
+                        .add(new DAGEdge<>(item1, item2)).build());
     }
 }
