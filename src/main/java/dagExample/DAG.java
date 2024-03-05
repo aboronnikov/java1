@@ -40,6 +40,14 @@ public class DAG<T> {
     }
 
     public void traverseItems(Consumer<DAGItem<T>> consumer) {
-        // TODO
+        var iter = edges.iterator();
+        if (iter.hasNext()) {
+            traverseItems(iter.next().getItem1(), consumer);
+        }
+    }
+
+    public void traverseItems(DAGItem<T> startItem, Consumer<DAGItem<T>> consumer) {
+        consumer.accept(startItem);
+        edges.stream().filter(e -> e.getItem1().equals(startItem)).map(DAGEdge::getItem2).forEach(i -> traverseItems(i, consumer));
     }
 }
